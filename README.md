@@ -1,5 +1,9 @@
-# License Plate Detection and Text Extraction Project
 
+# License Plate Detection and Text Extraction Project
+<div>
+    <img src="car1.jpeg" alt="License Plate Example 1" style="width: 45%; display: inline-block;">
+    <img src="car2.jpg" alt="License Plate Example 2" style="width: 45%; display: inline-block;">
+</div>
 ## Overview
 
 This project leverages YOLO (You Only Look Once) for detecting license plates in video frames and EasyOCR for extracting text from those plates. The process involves training a YOLO model on annotated images, predicting license plates in a video, and displaying the detected text.
