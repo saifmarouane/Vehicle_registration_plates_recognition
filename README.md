@@ -63,3 +63,56 @@ Saves the current frame as an image.
 Uses YOLO to detect license plates.
 Reads text from the annotated image using EasyOCR.
 Draws bounding boxes around detected plates and displays the text.
+
+
+
+
+The following sections explain how I structured the code and the main steps involved in processing the video and recognizing license plates.
+
+### 1. Load Models
+
+I load two YOLO models:
+- **coco_model**: This model detects general objects, such as vehicles (cars, trucks, buses).
+- **license_plate_detector**: This model is trained to specifically detect vehicle license plates here  yolo (1).
+
+```python
+coco_model= YOLO('yolov8n.pt')
+license_plate_detector = YOLO('C:\\Users\\GO\\Desktop\\anpr\\Vehicle_registration_plates_recognition\\best (1).pt')
+2. Process the Video Input
+I load the video from the specified path. Each frame of the video is processed to detect vehicles and license plates.
+
+python
+Copier le code
+cap=cv2.VideoCapture('C:\\Users\\GO\\Desktop\\plate\\video.mp4')
+3. Detect and Track Vehicles
+For each frame of the video, I use the coco_model to detect vehicles like cars, trucks, buses (IDs 2, 3, 5, 7). Then, I use a tracking algorithm (SORT) to assign unique IDs to each detected vehicle.
+
+python
+Copier le code
+detections = coco_model(frame)[0]
+track_ids = mot_tracker.update(np.asarray(detections_))
+4. Detect License Plates
+After detecting and tracking the vehicles, I apply the license_plate_detector model to identify license plates in the frame. Once the plates are detected, I crop and process the plate for better recognition.
+
+python
+Copier le code
+license_plates = license_plate_detector(frame)[0]
+5. Recognize the License Plate
+Using OpenCV, I convert the cropped license plate to grayscale and apply binary thresholding to enhance the characters. The utility function read_license_plate is then used to extract the license plate number as text.
+
+python
+Copier le code
+license_text, license_score = read_license_plate(license_plate_crop_thresh)
+6. Output Results
+The results are stored in a dictionary where each frame number is mapped to a vehicle ID and license plate information. Finally, these results are written to a CSV file for further use.
+
+python
+Copier le code
+write_csv(results, './test.csv')
+Additional Functions
+I also created utility functions:
+
+get_car: Associates the detected license plate with a specific vehicle.
+read_license_plate: Reads the license plate number from the processed image.
+write_csv: Writes the results into a CSV file.
+Running the Script
